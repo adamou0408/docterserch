@@ -14,24 +14,27 @@
 | Task 6：地圖前端 (Leaflet) | done | 定位、點選、標記、半徑圓圈 |
 | Task 7：篩選 UI + 列表 | done | FilterBar + ClinicListPanel + 連動 |
 | Task 8：Docker + 管理 API | done | docker-compose + 認證 middleware |
-| Task 9：爬蟲框架 | needs-human-intervention | Python Scrapy 專案尚未建立 |
-| Task 10：醫院爬蟲 | needs-human-intervention | 需研究各醫院官網 HTML 結構 |
+| Task 9：爬蟲框架 | done | Scrapy + NHI importer + pipeline + cron scheduler |
+| Task 10：醫院爬蟲 | done | 5 西醫 + 3 中醫 spiders + base classes |
 | Task 11：門診時刻表 API + UI | done | API + SchedulePanel + 信心指標 |
 | Task 12：管理後台完善 | done | crawl-status + crawl-trigger API |
 
-**完成率：10/12（83%）**
+**完成率：12/12（100%）**
 
 ## 測試覆蓋摘要
 
 | 層級 | 測試數 | 狀態 |
 |------|--------|------|
-| Unit | 14 | 全部通過 |
+| Unit (JS) | 14 | 全部通過 |
+| Unit (Python) | 21 | 全部通過 |
 | Integration | 0 | 需要 DB 環境（docker-compose 啟動後可測） |
 | E2E | 0 | 需要完整環境（docker-compose 啟動後可測） |
 
 ### 已完成的測試
 - `tests/unit/validation.test.ts`：10 個測試（參數驗證邏輯）
 - `tests/unit/auth.test.ts`：4 個測試（管理員認證）
+- `tests/crawler/test_nhi_importer.py`：8 個測試（NHI 解析、科別映射）
+- `tests/crawler/test_base_spider.py`：13 個測試（Session/Day parsing）
 
 ## 安全性檢查
 
@@ -49,7 +52,7 @@
 | 偏差 | 說明 |
 |------|------|
 | Prisma 7 API 差異 | Prisma 7 改為使用 prisma.config.ts 管理連線，constructor 不再接受 datasourceUrl |
-| Phase 2 爬蟲未實作 | Python Scrapy 專案結構需獨立環境開發，API 與 DB schema 已就緒 |
+| Phase 2 爬蟲已補完 | Scrapy 專案已建立，5 西醫 + 3 中醫 spiders 完成 |
 | PostGIS 索引 | 使用 Prisma raw query 的 ST_DWithin 而非 GIST 索引（索引需在 migration 中手動加入） |
 
 ## 程式碼結構
@@ -101,5 +104,5 @@ infra/
 - ✅ TypeScript 編譯無錯誤
 - ✅ ESLint 檢查通過
 - ✅ 單元測試 14/14 通過
-- ⚠️ Integration/E2E 測試需 DB 環境
-- ⚠️ Phase 2 爬蟲 (Task 9, 10) 需人工介入
+- ✅ Python 單元測試 21/21 通過
+- ⚠️ Integration/E2E 測試需 DB 環境（deploy 階段驗證）

@@ -28,3 +28,11 @@
 | 2026-04-06 | 衝突 | `conflicts/CONFLICT-001.md` | 偵測衝突：資料即時性 vs 爬取頻率限制 |
 | 2026-04-06 | 解決 | `conflicts/CONFLICT-001.md` | 解決衝突：採用方案 3（依資料品質分級） |
 | 2026-04-06 | 狀態變更 | `specs/hospital-clinic-map-search/spec.md` | draft → in-review → **approved** |
+| 2026-04-06 | 新增 | `specs/hospital-clinic-map-search/plan.md` | 技術方案：Next.js + PostGIS + Scrapy |
+| 2026-04-06 | 新增 | `specs/hospital-clinic-map-search/tasks.md` | 12 個可執行任務 |
+| 2026-04-06 | 新增 | `specs/hospital-clinic-map-search/contracts.md` | 5 個 API 端點定義 |
+| 2026-04-06 | 狀態變更 | `specs/hospital-clinic-map-search/spec.md` | approved → **in-progress** |
+| 2026-04-06 | 新增 | `src/` | Phase 1 實作：Next.js app + API + Leaflet 前端 |
+| 2026-04-06 | 新增 | `crawler/` | Phase 2 實作：Scrapy 爬蟲系統（5 西醫 + 3 中醫） |
+| 2026-04-06 | 狀態變更 | `specs/hospital-clinic-map-search/spec.md` | in-progress → **done**（12/12 tasks） |
+| 2026-04-06 | 更新 | `reviews/REVIEW-*.md` | Post-implementation verification 完成 |
