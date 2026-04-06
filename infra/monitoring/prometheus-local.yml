@@ -1,5 +1,6 @@
 # ──────────────────────────────────────────────
 # Prometheus — Local Development Configuration
+# Spec: specs/hospital-clinic-map-search/spec.md
 # ──────────────────────────────────────────────
 
 global:
@@ -10,8 +11,8 @@ rule_files:
   - /etc/prometheus/rules/*.yml
 
 scrape_configs:
-  - job_name: "app"
+  - job_name: "docterserch-app"
     static_configs:
-      - targets: ["app:8080"]
-    metrics_path: /metrics
-    scrape_interval: 10s
+      - targets: ["app:3000"]
+    metrics_path: /api/metrics
+    scrape_interval: 30s
