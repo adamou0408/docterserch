@@ -1,24 +1,49 @@
 # ──────────────────────────────────────────────
 # Demand-Driven Dev — Local Development
+# Spec: specs/hospital-clinic-map-search/spec.md
+# Task: specs/hospital-clinic-map-search/tasks.md — Task 8
 # ──────────────────────────────────────────────
 # Usage: docker compose up -d
 
 services:
+  # ── PostgreSQL + PostGIS ──
+  db:
+    image: postgis/postgis:16-3.4
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: docterserch
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── Next.js Application ──
   app:
     build:
-      context: ../../
-      dockerfile: infra/docker/Dockerfile
+      context: ../../src
+      dockerfile: ../infra/docker/Dockerfile.app
     ports:
-      - "${APP_PORT:-8080}:8080"
+      - "${APP_PORT:-3000}:3000"
     environment:
-      - ENVIRONMENT=dev
-      - APP_PORT=8080
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:${DB_PASSWORD:-postgres}@db:5432/docterserch
+      - ADMIN_TOKEN=${ADMIN_TOKEN:-dev-admin-token}
+    depends_on:
+      db:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/health"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
       interval: 15s
       timeout: 5s
       retries: 3
-      start_period: 10s
+      start_period: 30s
     restart: unless-stopped
 
   # ── Local monitoring (simulates production feedback loop) ──
@@ -41,3 +66,6 @@ services:
     depends_on:
       - prometheus
     restart: unless-stopped
+
+volumes:
+  pgdata:

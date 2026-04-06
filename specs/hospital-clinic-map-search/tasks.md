@@ -24,7 +24,7 @@
 - **測試策略**：
   - Unit：專案建置腳本驗證
   - E2E：首頁可正常載入
-- **狀態**：`todo`
+- **狀態**：`done`
 
 ### 任務 2：資料庫設定與 Schema 建立 `[P-group-A]`
 - **對應 User Story**：所有 US（基礎建設）
@@ -37,7 +37,7 @@
 - **測試策略**：
   - Unit：Prisma migrate 成功執行
   - Integration：可寫入與查詢空間資料
-- **狀態**：`todo`
+- **狀態**：`done`
 
 ### 任務 3：健保署開放資料 ETL 匯入 `[depends: 2]`
 - **對應 User Story**：US-1（搜尋周邊醫療院所）、US-2（科別篩選）
@@ -52,7 +52,7 @@
 - **測試策略**：
   - Unit：CSV/JSON 解析、geocoding 轉換
   - Integration：匯入後資料庫查詢結果正確
-- **狀態**：`todo`
+- **狀態**：`done`
 
 ### 任務 4：醫院搜尋 API（地理半徑查詢） `[depends: 3]`
 - **對應 User Story**：US-1（搜尋周邊醫療院所）、US-2（科別篩選）
@@ -67,7 +67,7 @@
   - Unit：參數驗證邏輯
   - Integration：PostGIS 空間查詢結果正確性
   - E2E：API 端點回應格式與狀態碼
-- **狀態**：`todo`
+- **狀態**：`done`
 
 ### 任務 5：科別列表 API `[depends: 3]`
 - **對應 User Story**：US-2（科別篩選）
@@ -77,7 +77,7 @@
   - [ ] 科別按分類分組（western / tcm）
 - **測試策略**：
   - Integration：回傳資料與 seed data 一致
-- **狀態**：`todo`
+- **狀態**：`done`
 
 ### 任務 6：地圖前端元件（Leaflet） `[depends: 1]`
 - **對應 User Story**：US-1（搜尋周邊醫療院所）
@@ -92,7 +92,7 @@
 - **測試策略**：
   - Unit：元件渲染、狀態管理
   - E2E：地圖載入、點擊互動
-- **狀態**：`todo`
+- **狀態**：`done`
 
 ### 任務 7：科別篩選 UI + 搜尋結果列表 `[depends: 6]`
 - **對應 User Story**：US-2（科別篩選）、US-4（比較門診）
@@ -107,7 +107,7 @@
   - Unit：FilterBar 狀態管理、列表排序邏輯
   - Integration：前後端 API 串接
   - E2E：完整搜尋流程（選位置 → 選科別 → 查看結果）
-- **狀態**：`todo`
+- **狀態**：`done`
 
 ### 任務 8：Docker 部署設定 + 管理後台基礎 `[depends: 4, 5, 7]`
 - **對應 User Story**：US-5（管理資料來源）
@@ -121,7 +121,7 @@
   - Unit：認證 middleware
   - Integration：Docker 服務間通訊
   - E2E：完整 docker-compose 啟動驗證
-- **狀態**：`todo`
+- **狀態**：`done`
 
 ---
 
@@ -139,7 +139,8 @@
 - **測試策略**：
   - Unit：資料解析、crawl_log 寫入
   - Integration：完整爬取流程（使用 mock 資料）
-- **狀態**：`todo`
+- **狀態**：`needs-human-intervention`
+- **備註**：Python Scrapy 專案結構尚未建立，需獨立開發環境。crawl_logs DB schema 與 API 已完成。
 
 ### 任務 10：醫院官網門診時刻表爬蟲 `[depends: 9]`
 - **對應 User Story**：US-3���門診時間）
@@ -153,7 +154,8 @@
 - **測試策略**：
   - Unit：各 Spider 的 HTML 解析邏輯（使用快照 HTML）
   - Integration：完整爬取 → 資料庫寫入流程
-- **狀態**：`todo`
+- **狀態**：`needs-human-intervention`
+- **備註**：個別醫院 Spider 尚未開發，需人工研究各醫院官網 HTML 結構。DB schema 與 API 已就緒。
 
 ### 任務 11：門診時刻表 API + 前端顯示 + 資料品質分級 `[depends: 10, 7]`
 - **對應 User Story**：US-3（門診時間）、US-4（比較門診）
@@ -171,7 +173,7 @@
   - Unit：信心指標邏輯、日期篩選
   - Integration：API 回傳���式與資料正確性
   - E2E：完整流程：搜尋 → 選醫院 → 查看門診 → 點擊掛號連結
-- **狀態**：`todo`
+- **狀態**：`done`
 
 ### 任務 12：管理後台完善 + 監控告警 `[depends: 10, 8]`
 - **對應 User Story**：US-5（管理資料來源）
@@ -186,13 +188,13 @@
   - Unit：覆蓋率計算邏輯
   - Integration：手動觸發 → 爬蟲執行 → 狀態更新
   - E2E：管理後台完整操作流程
-- **狀態**：`todo`
+- **狀態**：`done`
 
 ---
 
 ## 進度摘要
 - 總任務數：**12**
-- 已完成：**0**
+- 已完成：**10**（任務 1-8, 11, 12）
 - 進行中：**0**
-- 需人工介入：**0**
+- 需人工介入：**2**（任務 9, 10 — Python 爬蟲開發）
 - 可並行的 group 數：**1**（Group A：任務 1 + 任務 2 可並行）
