@@ -34,6 +34,11 @@ export async function searchHospitals(options: SearchOptions): Promise<{
     queryParams.push(...departments);
   }
 
+  // Parameterize LIMIT and OFFSET for defense-in-depth
+  const limitParamIndex = queryParams.length + 1;
+  const offsetParamIndex = queryParams.length + 2;
+  const searchQueryParams = [...queryParams, limit, offset];
+
   // PostGIS query: find hospitals within radius, compute distance
   const countQuery = `
     SELECT COUNT(*)::int as total
@@ -71,7 +76,7 @@ export async function searchHospitals(options: SearchOptions): Promise<{
     )
     ${departmentFilter}
     ORDER BY distance_meters ASC
-    LIMIT ${limit} OFFSET ${offset}
+    LIMIT $${limitParamIndex} OFFSET $${offsetParamIndex}
   `;
 
   type CountRow = { total: number };
@@ -92,7 +97,7 @@ export async function searchHospitals(options: SearchOptions): Promise<{
 
   const [countResult, hospitalRows] = await Promise.all([
     prisma.$queryRawUnsafe(countQuery, ...queryParams) as Promise<CountRow[]>,
-    prisma.$queryRawUnsafe(searchQuery, ...queryParams) as Promise<HospitalRow[]>,
+    prisma.$queryRawUnsafe(searchQuery, ...searchQueryParams) as Promise<HospitalRow[]>,
   ]);
 
   const total = countResult[0]?.total ?? 0;
