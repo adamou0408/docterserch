@@ -23,7 +23,8 @@ export async function searchHospitals(options: SearchOptions): Promise<{
 
   // Build WHERE clause for department filter
   let departmentFilter = '';
-  const queryParams: (number | string)[] = [lng, lat, radius];
+  // Haversine: params are $1=lat, $2=lng, $3=radius(meters)
+  const queryParams: (number | string)[] = [lat, lng, radius];
 
   if (departments.length > 0) {
     const placeholders = departments.map((_, i) => `$${i + 4}`).join(', ');
@@ -34,20 +35,25 @@ export async function searchHospitals(options: SearchOptions): Promise<{
     queryParams.push(...departments);
   }
 
-  // Parameterize LIMIT and OFFSET for defense-in-depth
+  // Parameterize LIMIT and OFFSET
   const limitParamIndex = queryParams.length + 1;
   const offsetParamIndex = queryParams.length + 2;
   const searchQueryParams = [...queryParams, limit, offset];
 
-  // PostGIS query: find hospitals within radius, compute distance
+  // Haversine distance formula (pure SQL, no PostGIS required)
+  // Returns distance in meters between two lat/lng points
+  const haversineExpr = `
+    (6371000 * acos(
+      cos(radians($1)) * cos(radians(h.latitude)) *
+      cos(radians(h.longitude) - radians($2)) +
+      sin(radians($1)) * sin(radians(h.latitude))
+    ))
+  `;
+
   const countQuery = `
     SELECT COUNT(*)::int as total
     FROM hospitals h
-    WHERE ST_DWithin(
-      ST_SetSRID(ST_MakePoint(h.longitude, h.latitude), 4326)::geography,
-      ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography,
-      $3
-    )
+    WHERE ${haversineExpr} <= $3
     ${departmentFilter}
   `;
 
@@ -64,16 +70,9 @@ export async function searchHospitals(options: SearchOptions): Promise<{
       h.registration_url,
       h.data_source,
       h.updated_at,
-      ST_Distance(
-        ST_SetSRID(ST_MakePoint(h.longitude, h.latitude), 4326)::geography,
-        ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography
-      )::int as distance_meters
+      ${haversineExpr}::int as distance_meters
     FROM hospitals h
-    WHERE ST_DWithin(
-      ST_SetSRID(ST_MakePoint(h.longitude, h.latitude), 4326)::geography,
-      ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography,
-      $3
-    )
+    WHERE ${haversineExpr} <= $3
     ${departmentFilter}
     ORDER BY distance_meters ASC
     LIMIT $${limitParamIndex} OFFSET $${offsetParamIndex}
