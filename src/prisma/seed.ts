@@ -3,7 +3,8 @@
 
 import { PrismaClient } from '../src/generated/prisma/client';
 
-const prisma = new PrismaClient();
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const prisma = new (PrismaClient as any)() as InstanceType<typeof PrismaClient>;
 
 // Seed departments
 const DEPARTMENTS = [
