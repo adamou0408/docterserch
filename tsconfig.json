@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "moduleResolution": "node",
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "paths": {
+      "next/*": ["src/node_modules/next/*"],
+      "next/server": ["src/node_modules/next/server"]
+    },
+    "types": ["jest", "node"]
+  },
+  "include": ["tests/**/*", "src/src/**/*", "jest.config.ts"],
+  "exclude": ["node_modules", "dist"]
+}

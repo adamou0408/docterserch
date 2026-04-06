@@ -1,0 +1,134 @@
+// Spec: specs/hospital-clinic-map-search/spec.md
+// Task: specs/hospital-clinic-map-search/tasks.md — Task 2
+
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  extensions = [postgis]
+}
+
+enum HospitalType {
+  hospital
+  clinic
+  tcm
+}
+
+enum DataSource {
+  api
+  crawled
+  nhi_only
+}
+
+enum DepartmentCategory {
+  western
+  tcm
+}
+
+enum SessionType {
+  morning
+  afternoon
+  evening
+}
+
+enum CrawlStatus {
+  success
+  failed
+  partial
+}
+
+model Hospital {
+  id              String       @id @default(uuid())
+  nhiCode         String       @unique @map("nhi_code")
+  name            String
+  address         String
+  phone           String?
+  latitude        Float
+  longitude       Float
+  type            HospitalType
+  websiteUrl      String?      @map("website_url")
+  registrationUrl String?      @map("registration_url")
+  dataSource      DataSource   @default(nhi_only) @map("data_source")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  departments HospitalDepartment[]
+  doctors     Doctor[]
+  schedules   Schedule[]
+  crawlLogs   CrawlLog[]
+
+  @@map("hospitals")
+}
+
+model Department {
+  id       String             @id @default(uuid())
+  name     String             @unique
+  category DepartmentCategory
+
+  hospitals HospitalDepartment[]
+  doctors   Doctor[]
+  schedules Schedule[]
+
+  @@map("departments")
+}
+
+model HospitalDepartment {
+  hospitalId   String @map("hospital_id")
+  departmentId String @map("department_id")
+
+  hospital   Hospital   @relation(fields: [hospitalId], references: [id])
+  department Department @relation(fields: [departmentId], references: [id])
+
+  @@id([hospitalId, departmentId])
+  @@map("hospital_departments")
+}
+
+model Doctor {
+  id           String @id @default(uuid())
+  name         String
+  hospitalId   String @map("hospital_id")
+  departmentId String @map("department_id")
+
+  hospital   Hospital   @relation(fields: [hospitalId], references: [id])
+  department Department @relation(fields: [departmentId], references: [id])
+  schedules  Schedule[]
+
+  @@map("doctors")
+}
+
+model Schedule {
+  id             String      @id @default(uuid())
+  hospitalId     String      @map("hospital_id")
+  doctorId       String?     @map("doctor_id")
+  departmentId   String      @map("department_id")
+  dayOfWeek      Int         @map("day_of_week")
+  session        SessionType
+  specificDate   DateTime?   @map("specific_date") @db.Date
+  isAvailable    Boolean?    @map("is_available")
+  lastVerifiedAt DateTime    @map("last_verified_at")
+
+  hospital   Hospital   @relation(fields: [hospitalId], references: [id])
+  doctor     Doctor?    @relation(fields: [doctorId], references: [id])
+  department Department @relation(fields: [departmentId], references: [id])
+
+  @@map("schedules")
+}
+
+model CrawlLog {
+  id             String      @id @default(uuid())
+  hospitalId     String?     @map("hospital_id")
+  source         String
+  status         CrawlStatus
+  recordsUpdated Int?        @map("records_updated")
+  errorMessage   String?     @map("error_message")
+  startedAt      DateTime    @map("started_at")
+  completedAt    DateTime?   @map("completed_at")
+
+  hospital Hospital? @relation(fields: [hospitalId], references: [id])
+
+  @@map("crawl_logs")
+}
