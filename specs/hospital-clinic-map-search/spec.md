@@ -1,12 +1,13 @@
 # 醫院門診地圖搜尋
 
-## 狀態：`in-progress`
+## 狀態：`done`
 
 ## 版本歷史
 | 版本 | 日期 | 變更摘要 | 觸發者 |
 |------|------|----------|--------|
 | v1.0 | 2026-04-06 | 初始版本 | /translate |
 | v1.1 | 2026-04-06 | 開始實作 | /implement |
+| v1.2 | 2026-04-06 | 實作完成（12/12 tasks） | /implement |
 
 ## 來源追溯
 - 原始需求：[intake/raw/2026-04-06-hospital-clinic-map-search.md](../../intake/raw/2026-04-06-hospital-clinic-map-search.md)

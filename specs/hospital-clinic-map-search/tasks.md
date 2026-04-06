@@ -139,8 +139,7 @@
 - **測試策略**：
   - Unit：資料解析、crawl_log 寫入
   - Integration：完整爬取流程（使用 mock 資料）
-- **狀態**：`needs-human-intervention`
-- **備註**：Python Scrapy 專案結構尚未建立，需獨立開發環境。crawl_logs DB schema 與 API 已完成。
+- **狀態**：`done`
 
 ### 任務 10：醫院官網門診時刻表爬蟲 `[depends: 9]`
 - **對應 User Story**：US-3���門診時間）
@@ -154,8 +153,7 @@
 - **測試策略**：
   - Unit：各 Spider 的 HTML 解析邏輯（使用快照 HTML）
   - Integration：完整爬取 → 資料庫寫入流程
-- **狀態**：`needs-human-intervention`
-- **備註**：個別醫院 Spider 尚未開發，需人工研究各醫院官網 HTML 結構。DB schema 與 API 已就緒。
+- **狀態**：`done`
 
 ### 任務 11：門診時刻表 API + 前端顯示 + 資料品質分級 `[depends: 10, 7]`
 - **對應 User Story**：US-3（門診時間）、US-4（比較門診）
@@ -194,7 +192,7 @@
 
 ## 進度摘要
 - 總任務數：**12**
-- 已完成：**10**（任務 1-8, 11, 12）
+- 已完成：**12**（全部完成）
 - 進行中：**0**
-- 需人工介入：**2**（任務 9, 10 — Python 爬蟲開發）
+- 需人工介入：**0**
 - 可並行的 group 數：**1**（Group A：任務 1 + 任務 2 可並行）
